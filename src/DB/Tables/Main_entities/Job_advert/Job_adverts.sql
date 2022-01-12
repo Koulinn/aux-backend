@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS "job_adverts" (
 	"state" VARCHAR(2),
 	"recruiter_id" uuid REFERENCES users("acc_id") NOT NULL,
 	"company_id" uuid REFERENCES companies("company_id"),
-	PRIMARY KEY ("job_advert_id", "recruiter_id")
+	PRIMARY KEY ("job_advert_id")
 );
