@@ -1,4 +1,4 @@
 CREATE TABLE IF NOT EXISTS "industries" (
-	"industry" VARCHAR(80) NOT NULL,
+	"industry" VARCHAR(40) NOT NULL,
 	PRIMARY KEY ("industry")
 );
