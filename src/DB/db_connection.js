@@ -1,12 +1,19 @@
-import client, { database } from './db_config.js'
+import sequelize from './db_config.js'
 import db_error_handlers from './db_error_handlers.js'
+import { database } from './db_config.js'
 
-const { db_conn_resolve, db_generic_error } = db_error_handlers
+const { db_conn_resolve } = db_error_handlers
 
 const db_connect = async () => {
-  await client.connect(db_conn_resolve)
+  try {
+    await sequelize.authenticate()
 
-  client.on('error', db_generic_error)
+    console.log(
+      `Connection to DB =====> ${database} has been established successfully.`
+    )
+  } catch (error) {
+    db_conn_resolve(error)
+  }
 }
 
 export default db_connect
