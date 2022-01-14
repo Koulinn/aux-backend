@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS "experiences" (
         "experience_id" uuid DEFAULT uuid_generate_v4 (),
         "candidate_id" uuid REFERENCES accounts("acc_id"),
-        "experience_type" experience_type NOT NULL,
+        "experience_type" VARCHAR(40) REFERENCES experience_types("experience_type"),
         "company_id" uuid REFERENCES companies("company_id"),
         "company_name" VARCHAR(80) NOT NULL,
         "start_date" DATE,

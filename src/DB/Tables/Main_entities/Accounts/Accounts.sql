@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "accounts" (
     "acc_id" uuid DEFAULT uuid_generate_v4 (),
-    "acc_type" account_type NOT NULL,
+    "account_type" VARCHAR(40) REFERENCES account_types("account_type"),
     "password" VARCHAR(80),
     "email_primary" VARCHAR(80) UNIQUE NOT NULL,
     "email_secondary" VARCHAR(80),
