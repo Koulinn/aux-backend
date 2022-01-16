@@ -1,8 +1,6 @@
-import testLib from './test_lib/index.js'
+import testingSQLHandlers from './testing_SQL_handlers.js'
 
-const {
-  testingHandlers: { testSQLInjection },
-} = testLib
+const { testSQLInjection } = testingSQLHandlers
 
 describe('Testing SQL body injection prevention', () => {
   it('should test that accept valid values', () => {
