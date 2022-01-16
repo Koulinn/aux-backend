@@ -3,11 +3,20 @@ const createError = (status, msg) => {
     status: status,
     msg: msg,
   }
-  return err
+  throw err
+}
+
+const checkBodyForInjection = (body) => {
+  for (const [key, value] of Object.entries(body)) {
+    if (value.match(';')) {
+      return true
+    }
+  }
+  return false
 }
 
 const utils = {
   createError,
+  checkBodyForInjection,
 }
-
 export default utils
