@@ -2,6 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import config from '../config/index.js'
 import '../DB/index.js'
+import routes from './routes.js'
+import morgan from 'morgan'
 
 const {
   globalVariables: { PORT },
@@ -11,10 +13,11 @@ const server = express()
 
 server.use(cors())
 server.use(express.json())
+server.use(morgan('tiny'))
 
-server.use('/', (req, res) => {
-  console.log('running')
-  res.send('working')
+routes.forEach((route) => {
+  console.log(route)
+  server.use(route.path, route.router)
 })
 
 server.listen(PORT, () => console.log('Server listening on ' + PORT))
