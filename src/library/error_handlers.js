@@ -1,40 +1,6 @@
-const notFound = (err, req, res, next) => {
-  if (err.status === 404) {
-    res.status(404).send({
-      success: false,
-      msg: err.msg,
-    })
-  } else {
-    next(err)
-  }
-}
-
-const badRequest = (err, req, res, next) => {
-  if (err.status === 400) {
-    res.status(400).send({
-      success: false,
-      msg: err.msg,
-    })
-  } else {
-    next(err)
-  }
-}
-
-const unauthorized = (err, req, res, next) => {
-  if (err.status === 401) {
-    console.log(err)
-    res.status(401).send({
-      status: false,
-      message: err.msg,
-    })
-  } else {
-    next(err)
-  }
-}
-
-const forbidden = (err, req, res, next) => {
-  if (err.status === 403) {
-    res.status(400).send({
+const statusErrorMiddleware = (err, req, res, next) => {
+  if (err.status) {
+    res.status(err.status).send({
       success: false,
       msg: err.msg,
     })
@@ -44,7 +10,7 @@ const forbidden = (err, req, res, next) => {
 }
 
 const serverError = (err, req, res, next) => {
-  console.log(err)
+  console.log(err, 'FROM serverError Middleware')
 
   res.status(500).send({
     success: false,
@@ -53,12 +19,6 @@ const serverError = (err, req, res, next) => {
 }
 
 // !important serverError MUST be the last
-const errorHandlers = [
-  notFound,
-  badRequest,
-  unauthorized,
-  forbidden,
-  serverError,
-]
+const errorHandlers = [statusErrorMiddleware, serverError]
 
 export default errorHandlers
