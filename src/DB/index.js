@@ -2,4 +2,7 @@ import db_connect from './db_connection.js'
 import createTables from './db_createTables.js'
 
 createTables()
-db_connect()
+
+if (process.env.NODE_ENV !== 'test') {
+  db_connect()
+}
