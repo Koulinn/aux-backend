@@ -19,6 +19,7 @@ describe('Testing the Database testing environment', () => {
     const body = {
       email_primary: 'test@mail.com',
       password: '123456',
+      accepted_terms: true,
     }
     testCreateAccountWithEmailAndPassword(body)
   })

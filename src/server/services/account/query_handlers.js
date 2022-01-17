@@ -1,6 +1,6 @@
 const createAccountWithEmailAndPasswordQuery = (body) => {
-  const { email_primary, password } = body
-  return `INSERT INTO accounts (email_primary, password) VALUES ('${email_primary}', '${password}') RETURNING acc_id;`
+  const { email_primary, password, accepted_terms } = body
+  return `INSERT INTO accounts (email_primary, password, accepted_terms) VALUES ('${email_primary}', '${password}', ${accepted_terms}) RETURNING acc_id;`
 }
 
 const query_handlers = {
