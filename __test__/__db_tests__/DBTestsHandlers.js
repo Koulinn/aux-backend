@@ -12,6 +12,7 @@ const testCreateAccountWithEmailAndPassword = async () => {
     email_primary: 'test@mail.com',
     password: '123456',
     accepted_terms: true,
+    account_type: 'candidate',
   }
   const query = await createAccountWithEmailAndPasswordQuery(body)
   const DBres = await readQuery(query)
