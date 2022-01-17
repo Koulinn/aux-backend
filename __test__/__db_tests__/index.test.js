@@ -10,19 +10,10 @@ describe('Testing the Database testing environment', () => {
     await createTables()
     await db_connect()
   })
-  it('should test that true is true', () => {
-    console.log('Test Database is running')
-    expect(true).toBe(true)
-  })
 
-  it('should test create user with email and password', () => {
-    const body = {
-      email_primary: 'test@mail.com',
-      password: '123456',
-      accepted_terms: true,
-    }
-    testCreateAccountWithEmailAndPassword(body)
-  })
+  it('should test create user with email and password', async () =>
+    await testCreateAccountWithEmailAndPassword())
+
   afterAll(async () => {
     await sequelize.query('DROP SCHEMA public CASCADE; CREATE SCHEMA public;')
     await sequelize.close()
