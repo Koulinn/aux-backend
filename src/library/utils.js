@@ -22,7 +22,6 @@ const readQuery = async (query) => {
     const res = await sequelize.query(query)
     return res
   } catch (error) {
-    console.log(error, 'from readQuery')
     return error
   }
 }
