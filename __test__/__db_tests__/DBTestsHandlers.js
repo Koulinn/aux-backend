@@ -7,8 +7,13 @@ const {
 
 const { createAccountWithEmailAndPasswordQuery } = account_queries
 
-const testCreateAccountWithEmailAndPassword = async (body, toBe) => {
-  const query = createAccountWithEmailAndPasswordQuery(body)
+const testCreateAccountWithEmailAndPassword = async () => {
+  const body = {
+    email_primary: 'test@mail.com',
+    password: '123456',
+    accepted_terms: true,
+  }
+  const query = await createAccountWithEmailAndPasswordQuery(body)
   const DBres = await readQuery(query)
   const { acc_id } = DBres[0][0]
 
