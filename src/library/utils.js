@@ -10,7 +10,7 @@ const createError = (status, msg) => {
 
 const bodyHasSQLInjection = (body) => {
   for (const [key, value] of Object.entries(body)) {
-    if (value.match(';')) {
+    if (typeof value === 'string' && value.match(';')) {
       return true
     }
   }
