@@ -8,13 +8,13 @@ describe('Testing SQL body injection prevention', () => {
       email: 'test@mail.com',
       password: '123456',
     }
-    testSQLInjection(body, true)
+    testSQLInjection(body, false)
   })
   it('should test that prevent invalid ;', () => {
     const body = {
       email: 'test@mail.com; SELECT * FROM USERS ;',
       password: '123456',
     }
-    testSQLInjection(body, false)
+    testSQLInjection(body, true)
   })
 })
