@@ -1,5 +1,5 @@
 import applicationRoutes from './services/application/index.js'
-import candidateRoutes from './services/candidate/index.js'
+import accountRoutes from './services/account/index.js'
 import companyRoutes from './services/company/index.js'
 import educationRoutes from './services/education/index.js'
 import recruiterRoutes from './services/recruiter/index.js'
@@ -11,8 +11,8 @@ const routes = [
     router: applicationRoutes,
   },
   {
-    path: '/candidates',
-    router: candidateRoutes,
+    path: '/accounts',
+    router: accountRoutes,
   },
   {
     path: '/companies',
