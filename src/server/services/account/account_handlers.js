@@ -15,7 +15,7 @@ const create = async (req, res, next) => {
 
     res.status(201).send({ success: true, acc_id })
   } catch (error) {
-    next()
+    next(error)
   }
 }
 
