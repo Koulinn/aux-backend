@@ -1,11 +1,11 @@
 import lib from '../../src/library/index.js'
 
 const {
-  utils: { checkBodyForInjection },
+  utils: { bodyHasSQLInjection },
 } = lib
 
 const testSQLInjection = (body, toBe) => {
-  const isValid = checkBodyForInjection(body)
+  const isValid = bodyHasSQLInjection(body)
   expect(isValid).toBe(toBe)
 }
 

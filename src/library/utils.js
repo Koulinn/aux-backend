@@ -1,3 +1,5 @@
+import sequelize from '../DB/db_config.js'
+
 const createError = (status, msg) => {
   const err = {
     status: status,
@@ -6,7 +8,7 @@ const createError = (status, msg) => {
   throw err
 }
 
-const checkBodyForInjection = (body) => {
+const bodyHasSQLInjection = (body) => {
   for (const [key, value] of Object.entries(body)) {
     if (value.match(';')) {
       return true
@@ -15,8 +17,19 @@ const checkBodyForInjection = (body) => {
   return false
 }
 
+const readQuery = async (query) => {
+  try {
+    const res = await sequelize.query(query)
+    return res
+  } catch (error) {
+    console.log(error, 'from readQuery')
+    return error
+  }
+}
+
 const utils = {
   createError,
-  checkBodyForInjection,
+  bodyHasSQLInjection,
+  readQuery,
 }
 export default utils
