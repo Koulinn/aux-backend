@@ -1,9 +1,9 @@
 import utils from './utils.js'
 
-const { createError, checkBodyForInjection } = utils
+const { createError, bodyHasSQLInjection } = utils
 
 const bodySQLPrevention = (req, res, next) => {
-  const isInvalid = checkBodyForInjection(req.body)
+  const isInvalid = bodyHasSQLInjection(req.body)
   if (isInvalid) {
     next()
     createError(403, 'Body invalid')
