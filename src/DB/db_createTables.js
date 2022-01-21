@@ -9,7 +9,7 @@ const createTables = async () => {
     })
     await sequelize.query(tablesQuery)
   } catch (error) {
-    console.log(error)
+    console.log(error, 'from createTables')
   }
 }
 
