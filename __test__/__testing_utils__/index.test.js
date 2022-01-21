@@ -1,4 +1,4 @@
-import testingUtilsHandlers from './testing_utils_handlers.js'
+import testingUtilsHandlers from './handlers.js'
 
 const { testHashPassword } = testingUtilsHandlers
 
