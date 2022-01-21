@@ -1,6 +1,6 @@
-import testingSQLHandlers from './testing_SQL_handlers.js'
+import testingSQLHandlers from './handlers.js'
 
-const { testSQLInjection } = testingSQLHandlers
+const { testSQLInjection, testCreateUser } = testingSQLHandlers
 
 describe('Testing SQL body injection prevention', () => {
   it('should test that accept valid values', () => {
@@ -17,4 +17,11 @@ describe('Testing SQL body injection prevention', () => {
     }
     testSQLInjection(body, true)
   })
+})
+
+describe('Testing user related queries', () => {
+  it('should test valid body of createUser function', async () =>
+    await testCreateUser())
+  it('should test invalid body of createUser function', async () =>
+    await testCreateUser())
 })
