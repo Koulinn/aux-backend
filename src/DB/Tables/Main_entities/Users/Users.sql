@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS "users" (
 	"acc_id" uuid REFERENCES accounts("acc_id") ON DELETE CASCADE,
 	"first_name" VARCHAR(40) NOT NULL,
-	"middle_name" VARCHAR(40) NOT NULL,
+	"middle_name" VARCHAR(40),
 	"last_name" VARCHAR(40) NOT NULL,
 	"about" TEXT,
 	"avatar" VARCHAR(240),
