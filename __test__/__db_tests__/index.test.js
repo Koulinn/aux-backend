@@ -1,7 +1,7 @@
 import db_connect from '../../src/DB/db_connection.js'
 import sequelize from '../../src/DB/db_config.js'
-import DBTestsHandlers from './DBTestsHandlers.js'
 import createTables from '../../src/DB/db_createTables.js'
+import DBTestsHandlers from './handlers.js'
 
 const { testCreateAccountWithEmailAndPassword } = DBTestsHandlers
 

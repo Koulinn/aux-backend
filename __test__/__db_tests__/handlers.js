@@ -9,7 +9,7 @@ const { createAccountWithEmailAndPasswordQuery } = account_queries
 
 const testCreateAccountWithEmailAndPassword = async () => {
   const body = {
-    email_primary: 'test@mail.com',
+    email_primary: 'testy@mail.com',
     password: '123456',
     accepted_terms: true,
     account_type: 'candidate',
