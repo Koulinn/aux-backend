@@ -5,6 +5,8 @@ import '../DB/index.js'
 import routes from './routes.js'
 import morgan from 'morgan'
 import errorHandlers from '../library/error_handlers.js'
+import passport from 'passport'
+import OauthStrategies from '../authentication/passportStrategies/index.js'
 
 const {
   globalVariables: { PORT },
@@ -15,6 +17,10 @@ const server = express()
 server.use(cors())
 server.use(express.json())
 server.use(morgan('tiny'))
+OauthStrategies.forEach((strategy) =>
+  passport.use(strategy.strategyName, strategy.googleStrategy)
+)
+server.use(passport.initialize())
 
 routes.forEach((route) => {
   server.use(route.path, route.router)
