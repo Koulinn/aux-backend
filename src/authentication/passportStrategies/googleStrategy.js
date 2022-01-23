@@ -2,7 +2,7 @@ import GoogleStrategy from 'passport-google-oauth20'
 import passport from 'passport'
 import globalOAuthValues from '../global_Oauth_values.js'
 import authUtils from '../auth_utils.js'
-import query_handlers from '../../server/services/account/query_handlers.js'
+import accountHandlers from '../../server/services/account/account_handlers.js'
 
 const {
   GOOGLE_OAUTH_CLIENT_ID,
@@ -16,7 +16,7 @@ const googleStrategyConfig = {
   callbackURL: URL_REDIRECT_OAUTH,
 }
 
-const { createUser } = query_handlers
+const { createUser } = accountHandlers
 
 const { isExistentOAuthAccount, createGoogleAccount } = authUtils
 
@@ -31,7 +31,8 @@ const googleStrategyCb = async (
     if (acc_id) {
       passportNext(null, acc_id)
     } else {
-      const acc_id = await createGoogleAccount(profile)
+      const { acc_id } = await createGoogleAccount(profile)
+
       await createUser(acc_id, profile)
       passportNext(null, acc_id)
     }
