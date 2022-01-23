@@ -23,7 +23,27 @@ const createAccountWithEmailAndPasswordQuery = async (body) => {
       ;`
 }
 
-const query_handlers = {
-  createAccountWithEmailAndPasswordQuery,
+const createUserQuery = (acc_id, personalInfo) => {
+  const { first_name, last_name, avatar } = personalInfo
+
+  return `
+        INSERT INTO users (
+            first_name, 
+            last_name, 
+            avatar, 
+            acc_id
+        ) VALUES (
+            '${first_name}', 
+            '${last_name}', 
+            '${avatar}', 
+            '${acc_id}') 
+        RETURNING 
+            acc_id
+      ;`
 }
-export default query_handlers
+
+const queryHandlers = {
+  createAccountWithEmailAndPasswordQuery,
+  createUserQuery,
+}
+export default queryHandlers
