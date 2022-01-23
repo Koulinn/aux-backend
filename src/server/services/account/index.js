@@ -7,7 +7,7 @@ const {
   middleWares: { bodySQLPrevention },
 } = lib
 
-const { create } = accountHandlers
+const { create, redirect } = accountHandlers
 
 const router = express.Router()
 
@@ -17,10 +17,6 @@ router.route('/OAuth/google').get(
     scope: ['profile', 'email'],
   })
 )
-router.route('/OAuth/redirect').get((req, res, next) => {
-  // find user, put token and redirect
-  res.cookie('cake_cookie', 'testValue')
-  res.redirect('http://localhost:3000/')
-})
+router.route('/OAuth/redirect').get(passport.authenticate('google'), redirect)
 
 export default router
