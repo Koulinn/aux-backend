@@ -3,7 +3,8 @@ import sequelize from '../../src/DB/db_config.js'
 import createTables from '../../src/DB/db_createTables.js'
 import DBTestsHandlers from './handlers.js'
 
-const { testCreateAccountWithEmailAndPassword } = DBTestsHandlers
+const { testCreateAccountWithEmailAndPassword, testCreateUser } =
+  DBTestsHandlers
 
 describe('Testing the Database testing environment', () => {
   beforeAll(async () => {
@@ -11,8 +12,10 @@ describe('Testing the Database testing environment', () => {
     await db_connect()
   })
 
-  it('should test create user with email and password', async () =>
+  it('should test createAccount with email and password', async () =>
     await testCreateAccountWithEmailAndPassword())
+
+  it('should test create user', async () => await testCreateUser())
 
   afterAll(async () => {
     await sequelize.query('DROP SCHEMA public CASCADE; CREATE SCHEMA public;')
