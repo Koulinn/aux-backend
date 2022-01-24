@@ -98,7 +98,7 @@ const verifyAuthorizationToken = (token) => {
 
     return res
   } catch (error) {
-    console.log(error)
+    throw Error('Error from verifyAuthorizationToken ' + error)
   }
 }
 
@@ -107,21 +107,32 @@ const verifyRefreshToken = (token) => {
     const res = verify(token, JWT_REFRESH_SECRET)
     return res
   } catch (error) {
-    console.log(error)
+    throw Error('Error from verifyRefreshToken ' + error)
   }
 }
 
 const saveRefreshToken = async (refreshToken, acc_id) => {
-  const query = insertRefreshTokenQuery(refreshToken, acc_id)
-  const res = await readQuery(query)
+  try {
+    const query = insertRefreshTokenQuery(refreshToken, acc_id)
+    await readQuery(query)
+
+    return true
+  } catch (error) {
+    throw Error('Error from saveRefreshToken ' + error)
+  }
 }
 
 const generateTokens = async (acc_id) => {
-  const authToken = genAuthorizationToken(acc_id)
-  const refresh_token = genRefreshToken(acc_id)
+  try {
+    const authToken = genAuthorizationToken(acc_id)
+    const refresh_token = genRefreshToken(acc_id)
 
-  await saveRefreshToken(refresh_token, acc_id)
-  return { authToken, refresh_token }
+    await saveRefreshToken(refresh_token, acc_id)
+
+    return { authToken, refresh_token }
+  } catch (error) {
+    throw Error('Error from generate Tokens ' + error)
+  }
 }
 
 const authUtils = {
