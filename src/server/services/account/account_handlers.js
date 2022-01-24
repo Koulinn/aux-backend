@@ -38,15 +38,19 @@ const createUser = async (acc_id, profile) => {
 const redirect = (req, res, next) => {
   const { authToken, refresh_token } = req.user
 
-  res.cookie('Authorization-token', `Bearer ${authToken}`, {
-    maxAge: 900000,
-    httpOnly: true,
-    sameSite: false,
-  })
+  if (authToken && refresh_token) {
+    res.cookie('Authorization-token', `Bearer ${authToken}`, {
+      maxAge: 900000,
+      httpOnly: true,
+      sameSite: false,
+    })
 
-  res.redirect(
-    `http://localhost:3000/dashboard&?refresh_token=${refresh_token}`
-  )
+    res.redirect(
+      `http://localhost:3000/dashboard&?refresh_token=${refresh_token}`
+    )
+  } else {
+    res.redirect(`http://localhost:3000/login`)
+  }
 }
 
 const userHandlers = {
