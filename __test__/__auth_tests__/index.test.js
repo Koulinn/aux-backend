@@ -3,8 +3,12 @@ import sequelize from '../../src/DB/db_config.js'
 import createTables from '../../src/DB/db_createTables.js'
 import authTestsHandlers from './handlers.js'
 
-const { testCheckExistentOAuthAccount, testCreateGoogleAccount } =
-  authTestsHandlers
+const {
+  testCheckExistentOAuthAccount,
+  testCreateGoogleAccount,
+  testGenAuthorizationToken,
+  testGenRefreshToken,
+} = authTestsHandlers
 
 const mockGoogleProfile = {
   id: 'google123',
@@ -26,6 +30,12 @@ describe('Testing account related queries', () => {
   })
   it('should test isExistentOAuthAccount with Google', async () =>
     await testCheckExistentOAuthAccount('google123', 'google_id'))
+
+  it('should test testGenAuthorizationToken', async () =>
+    await testGenAuthorizationToken('google123'))
+
+  it('should test testGenRefreshToken', async () =>
+    await testGenRefreshToken('google123'))
 
   afterAll(async () => {
     await sequelize.query('DROP SCHEMA public CASCADE; CREATE SCHEMA public;')
