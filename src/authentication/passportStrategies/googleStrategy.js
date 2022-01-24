@@ -28,12 +28,16 @@ const googleStrategyCb = async (
   passportNext
 ) => {
   try {
-    const acc_id = await isExistentOAuthAccount(profile.id, 'google_id')
-    if (acc_id) {
-      passportNext(null, acc_id)
+    const res = await isExistentOAuthAccount(profile.id, 'google_id')
+    if (res?.acc_id) {
+      const { acc_id } = res
+      const tokens = await generateTokens(acc_id)
+
+      passportNext(null, tokens)
     } else {
       const { acc_id } = await createGoogleAccount(profile)
       await createUser(acc_id, profile)
+
       const tokens = await generateTokens(acc_id)
 
       passportNext(null, tokens)
