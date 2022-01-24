@@ -89,15 +89,22 @@ const genAuthorizationToken = (accountId) => {
 }
 
 const verifyAuthorizationToken = (token) => {
-  const res = verify(token, JWT_AUTH_SECRET)
+  try {
+    const res = verify(token, JWT_AUTH_SECRET)
 
-  return res
+    return res
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const verifyRefreshToken = (token) => {
-  const res = verify(token, JWT_REFRESH_SECRET)
-
-  return res
+  try {
+    const res = verify(token, JWT_REFRESH_SECRET)
+    return res
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const authUtils = {
