@@ -18,7 +18,8 @@ const googleStrategyConfig = {
 
 const { createUser } = accountHandlers
 
-const { isExistentOAuthAccount, createGoogleAccount } = authUtils
+const { isExistentOAuthAccount, createGoogleAccount, generateTokens } =
+  authUtils
 
 const googleStrategyCb = async (
   accessToken,
@@ -32,9 +33,10 @@ const googleStrategyCb = async (
       passportNext(null, acc_id)
     } else {
       const { acc_id } = await createGoogleAccount(profile)
-
       await createUser(acc_id, profile)
-      passportNext(null, acc_id)
+      const tokens = await generateTokens(acc_id)
+
+      passportNext(null, tokens)
     }
   } catch (error) {
     console.log(error, 'from googleStrategy')
