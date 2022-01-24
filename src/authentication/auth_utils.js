@@ -11,8 +11,11 @@ const {
 const { JWT_AUTH_SECRET, JWT_REFRESH_SECRET, JWT_AUTH_EXP, JWT_REFRESH_EXP } =
   globalOAuthValues
 
-const { createAccountWithOAuthQuery, searchOAuthAccountQuery } =
-  OAuthQueryHandlers
+const {
+  createAccountWithOAuthQuery,
+  searchOAuthAccountQuery,
+  insertRefreshTokenQuery,
+} = OAuthQueryHandlers
 
 const { hash, compare } = bcrypt
 
@@ -40,6 +43,7 @@ const isExistentOAuthAccount = async (profileId, strategy) => {
     const query = await searchOAuthAccountQuery(profileId, strategy)
     const DBres = await readQuery(query)
     const acc_id = DBres[0][0]
+
     return acc_id
   } catch (error) {
     return false
@@ -107,6 +111,19 @@ const verifyRefreshToken = (token) => {
   }
 }
 
+const saveRefreshToken = async (refreshToken, acc_id) => {
+  const query = insertRefreshTokenQuery(refreshToken, acc_id)
+  const res = await readQuery(query)
+}
+
+const generateTokens = async (acc_id) => {
+  const authToken = genAuthorizationToken(acc_id)
+  const refresh_token = genRefreshToken(acc_id)
+
+  await saveRefreshToken(refresh_token, acc_id)
+  return { authToken, refresh_token }
+}
+
 const authUtils = {
   hashPassword,
   validatePassword,
@@ -116,5 +133,7 @@ const authUtils = {
   genAuthorizationToken,
   verifyAuthorizationToken,
   verifyRefreshToken,
+  saveRefreshToken,
+  generateTokens,
 }
 export default authUtils
