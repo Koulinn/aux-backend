@@ -28,9 +28,19 @@ const searchOAuthAccountQuery = async (OauthId, strategy) => {
         WHERE ${strategy} ='${OauthId}';`
 }
 
+const insertRefreshTokenQuery = (refreshToken, acc_id) => {
+  return `
+        UPDATE accounts
+        SET refresh_token ='${refreshToken}'
+        WHERE acc_id = '${acc_id}'
+        RETURNING refresh_token
+      ;`
+}
+
 const queryHandler = {
   createAccountWithOAuthQuery,
   searchOAuthAccountQuery,
+  insertRefreshTokenQuery,
 }
 
 export default queryHandler
