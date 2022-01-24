@@ -16,7 +16,7 @@ const { createAccountWithOAuthQuery, searchOAuthAccountQuery } =
 
 const { hash, compare } = bcrypt
 
-const { sign } = jwt
+const { sign, verify } = jwt
 
 const hashPassword = async (password) => {
   try {
@@ -68,21 +68,35 @@ const createGoogleAccount = async (profile) => {
   }
 }
 
-const genRefreshToken = async (accountId) => {
+const genRefreshToken = (accountId) => {
   const options = {
     expiresIn: JWT_REFRESH_EXP,
   }
 
-  const res = await sign({ acc_id: accountId }, JWT_REFRESH_SECRET, options)
+  const res = sign({ acc_id: accountId }, JWT_REFRESH_SECRET, options)
+
   return res
 }
 
-const genAuthorizationToken = async (accountId) => {
+const genAuthorizationToken = (accountId) => {
   const options = {
     expiresIn: JWT_AUTH_EXP,
   }
 
-  const res = await sign({ acc_id: accountId }, JWT_AUTH_SECRET, options)
+  const res = sign({ acc_id: accountId }, JWT_AUTH_SECRET, options)
+
+  return res
+}
+
+const verifyAuthorizationToken = (token) => {
+  const res = verify(token, JWT_AUTH_SECRET)
+
+  return res
+}
+
+const verifyRefreshToken = (token) => {
+  const res = verify(token, JWT_REFRESH_SECRET)
+
   return res
 }
 
@@ -93,5 +107,7 @@ const authUtils = {
   createGoogleAccount,
   genRefreshToken,
   genAuthorizationToken,
+  verifyAuthorizationToken,
+  verifyRefreshToken,
 }
 export default authUtils
