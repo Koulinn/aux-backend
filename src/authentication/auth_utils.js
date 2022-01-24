@@ -1,14 +1,22 @@
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 import OAuthQueryHandlers from './queryHandlers.js'
 import lib from '../library/index.js'
+import globalOAuthValues from './global_Oauth_values.js'
 
 const {
   utils: { readQuery },
 } = lib
+
+const { JWT_AUTH_SECRET, JWT_REFRESH_SECRET, JWT_AUTH_EXP, JWT_REFRESH_EXP } =
+  globalOAuthValues
+
 const { createAccountWithOAuthQuery, searchOAuthAccountQuery } =
   OAuthQueryHandlers
 
 const { hash, compare } = bcrypt
+
+const { sign } = jwt
 
 const hashPassword = async (password) => {
   try {
@@ -60,10 +68,30 @@ const createGoogleAccount = async (profile) => {
   }
 }
 
+const genRefreshToken = async (accountId) => {
+  const options = {
+    expiresIn: JWT_REFRESH_EXP,
+  }
+
+  const res = await sign({ acc_id: accountId }, JWT_REFRESH_SECRET, options)
+  return res
+}
+
+const genAuthorizationToken = async (accountId) => {
+  const options = {
+    expiresIn: JWT_AUTH_EXP,
+  }
+
+  const res = await sign({ acc_id: accountId }, JWT_AUTH_SECRET, options)
+  return res
+}
+
 const authUtils = {
   hashPassword,
   validatePassword,
   isExistentOAuthAccount,
   createGoogleAccount,
+  genRefreshToken,
+  genAuthorizationToken,
 }
 export default authUtils

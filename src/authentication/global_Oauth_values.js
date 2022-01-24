@@ -4,6 +4,8 @@ const {
   URL_REDIRECT_OAUTH,
   JWT_REFRESH_SECRET,
   JWT_AUTH_SECRET,
+  JWT_AUTH_EXP,
+  JWT_REFRESH_EXP,
 } = process.env
 
 const globalOAuthValues = {
@@ -12,5 +14,7 @@ const globalOAuthValues = {
   URL_REDIRECT_OAUTH,
   JWT_REFRESH_SECRET,
   JWT_AUTH_SECRET,
+  JWT_AUTH_EXP,
+  JWT_REFRESH_EXP,
 }
 export default globalOAuthValues
