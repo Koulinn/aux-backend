@@ -13,7 +13,7 @@ const { setAuthCookie } = accountUtils
 
 const { createAccountWithEmailAndPasswordQuery, createUserQuery } = user_queries
 
-const create = async (req, res, next) => {
+const createAccount = async (req, res, next) => {
   try {
     const query = await createAccountWithEmailAndPasswordQuery(req.body)
     const DB_res = await readQuery(query)
@@ -60,7 +60,7 @@ const redirect = (req, res, next) => {
 }
 
 const userHandlers = {
-  create,
+  createAccount,
   redirect,
   createUser,
 }
