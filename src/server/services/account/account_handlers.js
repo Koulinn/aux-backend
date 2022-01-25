@@ -1,9 +1,15 @@
 import user_queries from './query_handlers.js'
 import lib from '../../../library/index.js'
+import accountUtils from './utils.js'
+import authUtils from '../../../authentication/auth_utils.js'
 
 const {
   utils: { readQuery },
 } = lib
+
+const { generateTokens } = authUtils
+
+const { setAuthCookie } = accountUtils
 
 const { createAccountWithEmailAndPasswordQuery, createUserQuery } = user_queries
 
@@ -13,7 +19,11 @@ const create = async (req, res, next) => {
     const DB_res = await readQuery(query)
     const { acc_id } = DB_res[0][0]
 
-    res.status(201).send({ success: true, acc_id })
+    const { authToken } = await generateTokens(acc_id)
+
+    setAuthCookie(res, authToken)
+
+    res.status(201).send({ success: true })
   } catch (error) {
     next(error)
   }
@@ -39,11 +49,7 @@ const redirect = (req, res, next) => {
   const { authToken, refresh_token } = req.user
 
   if (authToken && refresh_token) {
-    res.cookie('Authorization-token', `Bearer ${authToken}`, {
-      maxAge: 900000,
-      httpOnly: true,
-      sameSite: false,
-    })
+    setAuthCookie(res, authToken)
 
     res.redirect(
       `http://localhost:3000/dashboard&?refresh_token=${refresh_token}`
