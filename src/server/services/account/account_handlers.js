@@ -4,12 +4,12 @@ import accountUtils from './utils.js'
 import authUtils from '../../../authentication/auth_utils.js'
 
 const {
-  utils: { readQuery },
+  utils: { readQuery, createError },
 } = lib
 
 const { generateTokens } = authUtils
 
-const { setAuthCookie } = accountUtils
+const { setAuthCookie, validateAccount } = accountUtils
 
 const { createAccountWithEmailAndPasswordQuery, createUserQuery } = user_queries
 
@@ -59,10 +59,31 @@ const redirect = (req, res, next) => {
   }
 }
 
+const login = async (req, res, next) => {
+  try {
+    const { email_primary, password } = req.body
+    const { status, acc_id } = await validateAccount(email_primary, password)
+
+    if (status === 'success') {
+      const { authToken } = await generateTokens(acc_id)
+      await setAuthCookie(res, authToken)
+
+      res.status(200).send({ success: true })
+    } else if (status === 'wrongPassword') {
+      next(createError(400, 'Wrong password'))
+    } else {
+      next(createError(404, 'Account not found'))
+    }
+  } catch (error) {
+    next(error)
+  }
+}
+
 const userHandlers = {
   createAccount,
   redirect,
   createUser,
+  login,
 }
 
 export default userHandlers
