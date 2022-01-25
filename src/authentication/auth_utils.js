@@ -30,12 +30,8 @@ const hashPassword = async (password) => {
   }
 }
 
-const validatePassword = async (password) => {
-  // const isCorrectPassword = await compare(password)
-  try {
-  } catch (error) {
-    console.log(error, 'from hashPassword')
-  }
+const validatePassword = async (password, hashedPassword) => {
+  return await compare(password, hashedPassword)
 }
 
 const isExistentOAuthAccount = async (profileId, strategy) => {
