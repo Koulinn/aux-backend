@@ -5,8 +5,7 @@ const { createError, bodyHasSQLInjection } = utils
 const bodySQLPrevention = (req, res, next) => {
   const isInvalid = bodyHasSQLInjection(req.body)
   if (isInvalid) {
-    createError(403, 'Body invalid')
-    next()
+    throw createError(400, 'Body invalid')
   } else {
     next()
   }
