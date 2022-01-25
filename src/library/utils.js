@@ -5,7 +5,7 @@ const createError = (status, msg) => {
     status: status,
     msg: msg,
   }
-  throw err
+  return err
 }
 
 const bodyHasSQLInjection = (body) => {
