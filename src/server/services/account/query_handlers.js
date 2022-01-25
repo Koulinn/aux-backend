@@ -42,8 +42,21 @@ const createUserQuery = (acc_id, personalInfo) => {
       ;`
 }
 
+const getAccountQuery = (identifier, value) => {
+  return `
+        SELECT
+            acc_id, 
+            password 
+        FROM
+            accounts
+        WHERE
+            ${identifier}='${value}'
+        ;`
+}
+
 const queryHandlers = {
   createAccountWithEmailAndPasswordQuery,
   createUserQuery,
+  getAccountQuery,
 }
 export default queryHandlers
