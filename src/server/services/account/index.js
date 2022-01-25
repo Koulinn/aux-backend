@@ -7,11 +7,13 @@ const {
   middleWares: { bodySQLPrevention },
 } = lib
 
-const { createAccount, redirect } = accountHandlers
+const { createAccount, redirect, login } = accountHandlers
 
 const router = express.Router()
 
 router.route('/').post(bodySQLPrevention, createAccount)
+router.route('/login').post(bodySQLPrevention, login)
+
 router.route('/OAuth/google').get(
   passport.authenticate('google', {
     scope: ['profile', 'email'],
