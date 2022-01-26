@@ -5,7 +5,7 @@ import lib from '../library/index.js'
 import globalOAuthValues from './global_Oauth_values.js'
 
 const {
-  utils: { readQuery },
+  utils: { readQuery, createError },
 } = lib
 
 const { JWT_AUTH_SECRET, JWT_REFRESH_SECRET, JWT_AUTH_EXP, JWT_REFRESH_EXP } =
@@ -80,7 +80,8 @@ const genRefreshToken = (accountId) => {
 
 const genAuthorizationToken = (accountId) => {
   const options = {
-    expiresIn: JWT_AUTH_EXP,
+    expiresIn: 15,
+    // expiresIn: JWT_AUTH_EXP,
   }
 
   const res = sign({ acc_id: accountId }, JWT_AUTH_SECRET, options)
@@ -94,7 +95,7 @@ const verifyAuthorizationToken = (token) => {
 
     return res
   } catch (error) {
-    throw Error('Error from verifyAuthorizationToken ' + error)
+    return error.name
   }
 }
 
@@ -115,6 +116,25 @@ const saveRefreshToken = async (refreshToken, acc_id) => {
     return true
   } catch (error) {
     throw Error('Error from saveRefreshToken ' + error)
+  }
+}
+
+const validateAccess = async (req, res, next) => {
+  try {
+    const authToken = req.cookies.authToken.split(' ')[1]
+    const tokenData = verifyAuthorizationToken(authToken)
+    if (tokenData?.acc_id) {
+      req.acc_id = tokenData.acc_id
+      next()
+    } else if (tokenData === 'TokenExpiredError') {
+      next(createError(401, 'Expired Token'))
+    } else if (tokenData === 'JsonWebTokenError') {
+      next(createError(403, 'Invalid Token'))
+    } else {
+      next(createError(400, 'Invalid Token'))
+    }
+  } catch (error) {
+    next(error)
   }
 }
 
@@ -142,5 +162,6 @@ const authUtils = {
   verifyRefreshToken,
   saveRefreshToken,
   generateTokens,
+  validateAccess,
 }
 export default authUtils
