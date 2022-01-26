@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS "accounts" (
     "phone_number_primary" VARCHAR(20) UNIQUE,
     "phone_number_secondary" VARCHAR(20),
     "refresh_token" VARCHAR(255) UNIQUE,
-    "CEP" VARCHAR(16),
+    "cep" VARCHAR(16),
     "state" CHAR(2),
     "city" VARCHAR(80),
     PRIMARY KEY ("acc_id")
