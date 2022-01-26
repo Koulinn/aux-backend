@@ -10,8 +10,8 @@ const { validatePassword } = authUtils
 
 const { getAccountQuery } = accountQueryHandlers
 
-const setAuthCookie = (res, authToken) => {
-  res.cookie('Authorization-token', `Bearer ${authToken}`, {
+const setTokensCookie = (res, authToken, cookieName) => {
+  res.cookie(cookieName, `Bearer ${authToken}`, {
     maxAge: 900000,
     httpOnly: true,
     sameSite: false,
@@ -42,7 +42,7 @@ const validateAccount = async (email, password) => {
 }
 
 const utils = {
-  setAuthCookie,
+  setTokensCookie,
   validateAccount,
 }
 

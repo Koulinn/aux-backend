@@ -9,7 +9,7 @@ const {
 
 const { generateTokens } = authUtils
 
-const { setAuthCookie, validateAccount } = accountUtils
+const { setTokensCookie, validateAccount } = accountUtils
 
 const { createAccountWithEmailAndPasswordQuery, createUserQuery } = user_queries
 
@@ -19,9 +19,10 @@ const createAccount = async (req, res, next) => {
     const DB_res = await readQuery(query)
     const { acc_id } = DB_res[0][0]
 
-    const { authToken } = await generateTokens(acc_id)
+    const { authToken, refresh_token } = await generateTokens(acc_id)
 
-    setAuthCookie(res, authToken)
+    setTokensCookie(res, authToken, 'authToken')
+    setTokensCookie(res, refresh_token, 'refreshToken')
 
     res.status(201).send({ success: true })
   } catch (error) {
@@ -49,11 +50,10 @@ const redirect = (req, res, next) => {
   const { authToken, refresh_token } = req.user
 
   if (authToken && refresh_token) {
-    setAuthCookie(res, authToken)
+    setTokensCookie(res, authToken, 'authToken')
+    setTokensCookie(res, refresh_token, 'refreshToken')
 
-    res.redirect(
-      `http://localhost:3000/dashboard&?refresh_token=${refresh_token}`
-    )
+    res.redirect(`http://localhost:3000/dashboard`)
   } else {
     res.redirect(`http://localhost:3000/login`)
   }
@@ -65,8 +65,9 @@ const login = async (req, res, next) => {
     const { status, acc_id } = await validateAccount(email_primary, password)
 
     if (status === 'success') {
-      const { authToken } = await generateTokens(acc_id)
-      await setAuthCookie(res, authToken)
+      const { authToken, refresh_token } = await generateTokens(acc_id)
+      setTokensCookie(res, authToken, 'authToken')
+      setTokensCookie(res, refresh_token, 'refreshToken')
 
       res.status(200).send({ success: true })
     } else if (status === 'wrongPassword') {
