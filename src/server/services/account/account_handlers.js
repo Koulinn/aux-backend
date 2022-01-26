@@ -80,11 +80,20 @@ const login = async (req, res, next) => {
   }
 }
 
+const getUser = async (req, res, next) => {
+  try {
+    res.status(200).send('inside me')
+  } catch (error) {
+    next(error)
+  }
+}
+
 const userHandlers = {
   createAccount,
   redirect,
   createUser,
   login,
+  getUser,
 }
 
 export default userHandlers
