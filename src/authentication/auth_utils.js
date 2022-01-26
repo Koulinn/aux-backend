@@ -121,6 +121,11 @@ const saveRefreshToken = async (refreshToken, acc_id) => {
 
 const validateAccess = async (req, res, next) => {
   try {
+    if (!req.cookies?.authToken) {
+      next(createError(401, 'Credentials missing'))
+      return
+    }
+
     const authToken = req.cookies.authToken.split(' ')[1]
     const tokenData = verifyAuthorizationToken(authToken)
     if (tokenData?.acc_id) {
