@@ -7,6 +7,8 @@ import morgan from 'morgan'
 import errorHandlers from '../library/error_handlers.js'
 import passport from 'passport'
 import OauthStrategies from '../authentication/passportStrategies/index.js'
+import cookieParser from 'cookie-parser'
+import corsConfig from '../config/server_config.js'
 
 const {
   globalVariables: { PORT },
@@ -14,7 +16,8 @@ const {
 
 const server = express()
 
-server.use(cors())
+server.use(cookieParser())
+server.use(cors(corsConfig))
 server.use(express.json())
 server.use(morgan('tiny'))
 OauthStrategies.forEach((strategy) =>
