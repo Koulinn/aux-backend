@@ -80,8 +80,7 @@ const genRefreshToken = (accountId) => {
 
 const genAuthorizationToken = (accountId) => {
   const options = {
-    expiresIn: 15,
-    // expiresIn: JWT_AUTH_EXP,
+    expiresIn: JWT_AUTH_EXP,
   }
 
   const res = sign({ acc_id: accountId }, JWT_AUTH_SECRET, options)
