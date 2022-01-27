@@ -54,9 +54,19 @@ const getAccountQuery = (identifier, value) => {
         ;`
 }
 
+const updatePasswordQuery = async (acc_id, password) => {
+  const hashedPassword = await hashPassword(password)
+  return `
+          UPDATE accounts
+          SET password ='${hashedPassword}' 
+          WHERE acc_id ='${acc_id}'
+    ;`
+}
+
 const queryHandlers = {
   createAccountWithEmailAndPasswordQuery,
   createUserQuery,
   getAccountQuery,
+  updatePasswordQuery,
 }
 export default queryHandlers

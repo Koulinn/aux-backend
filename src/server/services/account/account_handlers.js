@@ -1,4 +1,4 @@
-import user_queries from './query_handlers.js'
+import accountQueries from './query_handlers.js'
 import lib from '../../../library/index.js'
 import accountUtils from './utils.js'
 import authUtils from '../../../authentication/auth_utils.js'
@@ -11,7 +11,11 @@ const { generateTokens } = authUtils
 
 const { setTokensCookie, validateAccount } = accountUtils
 
-const { createAccountWithEmailAndPasswordQuery, createUserQuery } = user_queries
+const {
+  createAccountWithEmailAndPasswordQuery,
+  createUserQuery,
+  updatePasswordQuery,
+} = accountQueries
 
 const createAccount = async (req, res, next) => {
   try {
@@ -82,7 +86,27 @@ const login = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
   try {
-    res.status(200).send('inside me')
+    res.status(200).send('inside getUser')
+  } catch (error) {
+    next(error)
+  }
+}
+
+const newPassword = async (req, res, next) => {
+  try {
+    const { acc_id } = req
+    const { password } = req.body
+
+    const query = await updatePasswordQuery(acc_id, password)
+    const DB_res = await readQuery(query)
+
+    const isUpdated = DB_res[1].rowCount
+
+    if (isUpdated) {
+      res.status(200).send({ success: true })
+    } else {
+      next(createError(400, 'Password not updated'))
+    }
   } catch (error) {
     next(error)
   }
@@ -94,6 +118,7 @@ const userHandlers = {
   createUser,
   login,
   getUser,
+  newPassword,
 }
 
 export default userHandlers

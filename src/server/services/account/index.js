@@ -10,7 +10,7 @@ const {
 
 const { validateAccess } = authUtils
 
-const { createAccount, redirect, login, getUser } = accountHandlers
+const { createAccount, redirect, login, getUser, newPassword } = accountHandlers
 
 const router = express.Router()
 
@@ -19,6 +19,10 @@ router.route('/').post(bodySQLPrevention, createAccount)
 router.route('/me').get(validateAccess, validateAccount, getUser)
 
 router.route('/login').post(bodySQLPrevention, login)
+
+router
+  .route('/resetPassword')
+  .put(bodySQLPrevention, validateAccess, validateAccount, newPassword)
 
 router.route('/OAuth/google').get(
   passport.authenticate('google', {
