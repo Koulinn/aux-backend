@@ -70,6 +70,7 @@ const addPasswordResetTokenQuery = async (email, resetToken) => {
             password_reset_token ='${resetToken}',
             password_reset_expiration= (NOW() + '1 hour'::interval)
           WHERE email_primary ='${email}'
+          RETURNING email_primary
     ;`
 }
 
