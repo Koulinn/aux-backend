@@ -17,6 +17,7 @@ const {
   getUser,
   newPassword,
   passwordRecovery,
+  newPasswordRecovered,
 } = accountHandlers
 
 const router = express.Router()
@@ -40,5 +41,8 @@ router.route('/OAuth/google').get(
 router.route('/OAuth/redirect').get(passport.authenticate('google'), redirect)
 
 router.route('/passwordRecovery').put(bodySQLPrevention, passwordRecovery)
+router
+  .route('/passwordRecovery/:token')
+  .put(bodySQLPrevention, newPasswordRecovered)
 
 export default router

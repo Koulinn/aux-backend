@@ -63,14 +63,29 @@ const updatePasswordQuery = async (acc_id, password) => {
     ;`
 }
 
-const addPasswordResetTokenQuery = async (email, resetToken) => {
+const addPasswordResetTokenQuery = (email, resetToken) => {
   return `
           UPDATE accounts
           SET 
             password_reset_token ='${resetToken}',
-            password_reset_expiration= (NOW() + '1 hour'::interval)
+            password_reset_expiration= (NOW() + '15 minutes'::interval)
           WHERE email_primary ='${email}'
           RETURNING email_primary
+    ;`
+}
+
+const updatePasswordRecoveredQuery = async (password, password_reset_token) => {
+  const hashedPassword = await hashPassword(password)
+  return `
+          UPDATE accounts
+          SET 
+            password ='${hashedPassword}',
+            password_reset_expiration = null,
+            password_reset_token = null
+          WHERE 
+            password_reset_token ='${password_reset_token}'
+          AND
+            password_reset_expiration > NOW()
     ;`
 }
 
@@ -80,5 +95,6 @@ const queryHandlers = {
   getAccountQuery,
   updatePasswordQuery,
   addPasswordResetTokenQuery,
+  updatePasswordRecoveredQuery,
 }
 export default queryHandlers

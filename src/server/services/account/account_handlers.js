@@ -17,6 +17,7 @@ const {
   createUserQuery,
   updatePasswordQuery,
   addPasswordResetTokenQuery,
+  updatePasswordRecoveredQuery,
 } = accountQueries
 
 const {
@@ -125,7 +126,7 @@ const passwordRecovery = async (req, res, next) => {
 
     const resetToken = genResetToken()
 
-    const query = await addPasswordResetTokenQuery(email_primary, resetToken)
+    const query = addPasswordResetTokenQuery(email_primary, resetToken)
     const DB_res = await readQuery(query)
 
     const isUpdated = DB_res[1].rowCount
@@ -146,6 +147,28 @@ const passwordRecovery = async (req, res, next) => {
     next(error)
   }
 }
+
+const newPasswordRecovered = async (req, res, next) => {
+  try {
+    const { token } = req.params
+
+    const { password } = req.body
+
+    const query = await updatePasswordRecoveredQuery(password, token)
+    const DB_res = await readQuery(query)
+
+    const isUpdated = DB_res[1].rowCount
+
+    if (isUpdated) {
+      res.status(200).send({ success: true })
+    } else {
+      res.status(400).send({ success: false, msg: 'Password not updated' })
+    }
+  } catch (error) {
+    next(error)
+  }
+}
+
 const userHandlers = {
   createAccount,
   redirect,
@@ -154,6 +177,7 @@ const userHandlers = {
   getUser,
   newPassword,
   passwordRecovery,
+  newPasswordRecovered,
 }
 
 export default userHandlers
