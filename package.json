@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Koulinn/aux-backend#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.6.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -35,6 +36,7 @@
     "passport": "^0.5.2",
     "passport-google-oauth20": "^2.0.0",
     "pg": "^8.7.1",
+    "randomstring": "^1.2.2",
     "sequelize": "^6.12.5"
   },
   "devDependencies": {
