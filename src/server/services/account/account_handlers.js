@@ -2,6 +2,7 @@ import accountQueries from './query_handlers.js'
 import lib from '../../../library/index.js'
 import accountUtils from './utils.js'
 import authUtils from '../../../authentication/auth_utils.js'
+import communications from '../../../communications/index.js'
 
 const {
   utils: { readQuery, createError },
@@ -9,13 +10,19 @@ const {
 
 const { generateTokens } = authUtils
 
-const { setTokensCookie, validateAccount } = accountUtils
+const { setTokensCookie, validateAccount, genResetToken } = accountUtils
 
 const {
   createAccountWithEmailAndPasswordQuery,
   createUserQuery,
   updatePasswordQuery,
+  addPasswordResetTokenQuery,
 } = accountQueries
+
+const {
+  templates: { passwordResetEmail },
+  providers: { sendEmail },
+} = communications
 
 const createAccount = async (req, res, next) => {
   try {
@@ -112,6 +119,33 @@ const newPassword = async (req, res, next) => {
   }
 }
 
+const passwordRecovery = async (req, res, next) => {
+  try {
+    const { email_primary } = req.body
+
+    const resetToken = genResetToken()
+
+    const query = await addPasswordResetTokenQuery(email_primary, resetToken)
+    const DB_res = await readQuery(query)
+
+    const isUpdated = DB_res[1].rowCount
+
+    if (isUpdated) {
+      const { email_primary } = DB_res[0][0]
+      const emailMsg = passwordResetEmail(email_primary, resetToken)
+      const isSent = await sendEmail(emailMsg)
+      if (isSent) {
+        res.status(200).send({ success: true })
+      } else {
+        next(createError(400, 'Email not sent'))
+      }
+    } else {
+      next(createError(400, 'Account not found'))
+    }
+  } catch (error) {
+    next(error)
+  }
+}
 const userHandlers = {
   createAccount,
   redirect,
@@ -119,6 +153,7 @@ const userHandlers = {
   login,
   getUser,
   newPassword,
+  passwordRecovery,
 }
 
 export default userHandlers
