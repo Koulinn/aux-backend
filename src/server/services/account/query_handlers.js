@@ -63,10 +63,21 @@ const updatePasswordQuery = async (acc_id, password) => {
     ;`
 }
 
+const addPasswordResetTokenQuery = async (email, resetToken) => {
+  return `
+          UPDATE accounts
+          SET 
+            password_reset_token ='${resetToken}',
+            password_reset_expiration= (NOW() + '1 hour'::interval)
+          WHERE email_primary ='${email}'
+    ;`
+}
+
 const queryHandlers = {
   createAccountWithEmailAndPasswordQuery,
   createUserQuery,
   getAccountQuery,
   updatePasswordQuery,
+  addPasswordResetTokenQuery,
 }
 export default queryHandlers
