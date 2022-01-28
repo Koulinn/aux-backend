@@ -1,5 +1,5 @@
-import sgMail from './sendGrid.js'
+import sendEmail from './sendGrid.js'
 
-const providers = { sgMail }
+const providers = { sendEmail }
 
 export default providers

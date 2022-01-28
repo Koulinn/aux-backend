@@ -8,7 +8,16 @@ const passwordResetEmail = (acc_email, reset_code) => {
     from: AUX_SEO_EMAIL,
     subject: 'SEO AUX Password reset',
     text: 'To reset click on or copy paste to your browser link',
-    html: `<a>${DEV_URL}/accounts/recovery/${reset_code}</a>`,
+    html: `
+            <html>
+              <head>
+                  <title></title>
+              </head>
+                <body>
+                  <a href="${DEV_URL}/accounts/recovery/${reset_code}">${DEV_URL}/accounts/recovery/${reset_code}</a>
+                </body>
+            </html>
+          `,
   }
 }
 
