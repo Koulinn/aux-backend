@@ -10,7 +10,14 @@ const {
 
 const { validateAccess } = authUtils
 
-const { createAccount, redirect, login, getUser, newPassword } = accountHandlers
+const {
+  createAccount,
+  redirect,
+  login,
+  getUser,
+  newPassword,
+  passwordRecovery,
+} = accountHandlers
 
 const router = express.Router()
 
@@ -29,6 +36,9 @@ router.route('/OAuth/google').get(
     scope: ['profile', 'email'],
   })
 )
+
 router.route('/OAuth/redirect').get(passport.authenticate('google'), redirect)
+
+router.route('/passwordRecovery').put(bodySQLPrevention, passwordRecovery)
 
 export default router
