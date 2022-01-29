@@ -21,7 +21,7 @@ server.use(cors(corsConfig))
 server.use(express.json())
 server.use(morgan('tiny'))
 OauthStrategies.forEach((strategy) =>
-  passport.use(strategy.strategyName, strategy.googleStrategy)
+  passport.use(strategy.strategyName, strategy.strategy)
 )
 server.use(passport.initialize())
 
