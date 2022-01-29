@@ -1,8 +1,13 @@
 import googleStrategy from './googleStrategy.js'
+import gitHubStrategy from './gitHubStrategy.js'
 const OauthStrategies = [
   {
-    googleStrategy,
+    strategy: googleStrategy,
     strategyName: 'google',
+  },
+  {
+    strategy: gitHubStrategy,
+    strategyName: 'github',
   },
 ]
 
