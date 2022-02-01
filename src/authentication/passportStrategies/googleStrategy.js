@@ -7,13 +7,13 @@ import accountHandlers from '../../server/services/account/account_handlers.js'
 const {
   GOOGLE_OAUTH_CLIENT_ID,
   GOOGLE_OAUTH_CLIENT_SECRET,
-  URL_REDIRECT_OAUTH,
+  URL_REDIRECT_GOOGLE_OAUTH,
 } = globalOAuthValues
 
 const googleStrategyConfig = {
   clientID: GOOGLE_OAUTH_CLIENT_ID,
   clientSecret: GOOGLE_OAUTH_CLIENT_SECRET,
-  callbackURL: URL_REDIRECT_OAUTH,
+  callbackURL: URL_REDIRECT_GOOGLE_OAUTH,
 }
 
 const { createUser } = accountHandlers
