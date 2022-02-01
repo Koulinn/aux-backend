@@ -38,7 +38,18 @@ router.route('/OAuth/google').get(
   })
 )
 
-router.route('/OAuth/redirect').get(passport.authenticate('google'), redirect)
+router.route('/OAuth/github').get(
+  passport.authenticate('github', {
+    scope: ['user:email'],
+  })
+)
+router
+  .route('/OAuth/google/redirect')
+  .get(passport.authenticate('google'), redirect)
+
+router
+  .route('/OAuth/github/redirect')
+  .get(passport.authenticate('github'), redirect)
 
 router.route('/passwordRecovery').put(bodySQLPrevention, passwordRecovery)
 router
