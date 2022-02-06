@@ -52,18 +52,41 @@ const createGoogleAccount = async (profile) => {
     accepted_terms: true,
     email_primary: profile.emails[0].value,
   }
-  const query = await createAccountWithOAuthQuery(
-    accountData,
-    accountData.google_id,
-    'google_id'
-  )
 
   try {
+    const query = await createAccountWithOAuthQuery(
+      accountData,
+      accountData.google_id,
+      'google_id'
+    )
     const res = await readQuery(query)
 
     return res[0][0]
   } catch (error) {
     console.log('Error at createGoogleAccount')
+    return false
+  }
+}
+
+const createGitHubAccount = async (profile) => {
+  const accountData = {
+    github_id: profile.id,
+    account_type: 'candidate',
+    accepted_terms: true,
+    email_primary: profile.emails[0].value,
+  }
+
+  try {
+    const query = await createAccountWithOAuthQuery(
+      accountData,
+      accountData.github_id,
+      'github_id'
+    )
+    const res = await readQuery(query)
+
+    return res[0][0]
+  } catch (error) {
+    console.log('Error at createGitHubAccount')
     return false
   }
 }
@@ -160,6 +183,7 @@ const authUtils = {
   validatePassword,
   isExistentOAuthAccount,
   createGoogleAccount,
+  createGitHubAccount,
   genRefreshToken,
   genAuthorizationToken,
   verifyAuthorizationToken,
