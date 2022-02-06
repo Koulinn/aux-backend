@@ -18,6 +18,34 @@ const selectAccountQuery = (acc_id) => {
         ;`
 }
 
-const queryHandlers = { selectAccountQuery }
+const generateTableStrings = (objToConvert) => {
+  const propertyList = Object.entries(objToConvert)
+
+  let unnormalizedTableKeys = ''
+  let unnormalizedTableValues = ''
+
+  propertyList.forEach((property) => {
+    unnormalizedTableKeys += `${property[0]}, `
+
+    if (typeof property[1] === 'string') {
+      unnormalizedTableValues += `'${property[1]}', `
+    } else {
+      unnormalizedTableValues += `${property[1]}, `
+    }
+  })
+
+  const tableKeys = unnormalizedTableKeys.substring(
+    0,
+    unnormalizedTableKeys.length - 2
+  )
+
+  const tableValues = unnormalizedTableValues.substring(
+    0,
+    unnormalizedTableValues.length - 2
+  )
+  return { tableKeys, tableValues }
+}
+
+const queryHandlers = { selectAccountQuery, generateTableStrings }
 
 export default queryHandlers
