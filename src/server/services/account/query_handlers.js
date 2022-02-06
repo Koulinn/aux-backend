@@ -1,8 +1,13 @@
 import authentication from '../../../authentication/index.js'
+import lib from '../../../library/index.js'
 
 const {
   authUtils: { hashPassword },
 } = authentication
+
+const {
+  queryHandlers: { generateTableStrings },
+} = lib
 
 const createAccountWithEmailAndPasswordQuery = async (body) => {
   const { email_primary, password, accepted_terms, account_type } = body
@@ -24,18 +29,14 @@ const createAccountWithEmailAndPasswordQuery = async (body) => {
 }
 
 const createUserQuery = (acc_id, personalInfo) => {
-  const { first_name, last_name, avatar } = personalInfo
+  const { tableKeys, tableValues } = generateTableStrings(personalInfo)
 
   return `
         INSERT INTO users (
-            first_name, 
-            last_name, 
-            avatar, 
+            ${tableKeys},
             acc_id
         ) VALUES (
-            '${first_name}', 
-            '${last_name}', 
-            '${avatar}', 
+            ${tableValues}, 
             '${acc_id}') 
         RETURNING 
             acc_id
