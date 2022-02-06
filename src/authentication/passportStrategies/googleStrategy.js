@@ -35,8 +35,13 @@ const googleStrategyCb = async (
 
       passportNext(null, tokens)
     } else {
+      const normalizedProfile = {
+        first_name: profile.name.givenName,
+        last_name: profile.name.familyName,
+        avatar: profile.photos[0].value,
+      }
       const { acc_id } = await createGoogleAccount(profile)
-      await createUser(acc_id, profile)
+      await createUser(acc_id, normalizedProfile)
 
       const tokens = await generateTokens(acc_id)
 
