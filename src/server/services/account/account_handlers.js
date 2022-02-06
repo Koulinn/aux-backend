@@ -42,14 +42,9 @@ const createAccount = async (req, res, next) => {
   }
 }
 
-const createUser = async (acc_id, profile) => {
+const createUser = async (acc_id, normalizedProfile) => {
   try {
-    const personalInfo = {
-      first_name: profile.name.givenName,
-      last_name: profile.name.familyName,
-      avatar: profile.photos[0].value,
-    }
-    const query = await createUserQuery(acc_id, personalInfo)
+    const query = await createUserQuery(acc_id, normalizedProfile)
     const DB_res = await readQuery(query)
 
     return DB_res[0][0].acc_id
