@@ -7,24 +7,34 @@ const {
 
 const {
   queryHandlers: { generateTableStrings },
+  utils: { genTempToken },
 } = lib
 
 const createAccountWithEmailAndPasswordQuery = async (body) => {
   const { email_primary, password, accepted_terms, account_type } = body
   const hashedPassword = await hashPassword(password)
+  const accountToken = genTempToken()
+
   return `
         INSERT INTO accounts (
             email_primary, 
             password, 
             accepted_terms, 
-            account_type
+            account_type,
+            account_confirmation_token,
+            account_confirmation_expirartion
         ) VALUES (
             '${email_primary}', 
             '${hashedPassword}', 
             ${accepted_terms}, 
-            '${account_type}') 
+            '${account_type}',
+            '${accountToken}',
+            (NOW() + '1 day'::interval)
+        ) 
         RETURNING 
-             acc_id
+             acc_id,
+             email_primary,
+             account_confirmation_token
       ;`
 }
 
@@ -90,6 +100,18 @@ const updatePasswordRecoveredQuery = async (password, password_reset_token) => {
     ;`
 }
 
+const emailConfirmationQuery = (token) => {
+  return `
+          UPDATE accounts
+          SET 
+            account_confirmation_expirartion = null,
+            account_confirmation_token = null,
+            confirmed_acc = true
+          WHERE 
+            account_confirmation_token ='${token}'
+    ;`
+}
+
 const queryHandlers = {
   createAccountWithEmailAndPasswordQuery,
   createUserQuery,
@@ -97,5 +119,6 @@ const queryHandlers = {
   updatePasswordQuery,
   addPasswordResetTokenQuery,
   updatePasswordRecoveredQuery,
+  emailConfirmationQuery,
 }
 export default queryHandlers
