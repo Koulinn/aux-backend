@@ -1,16 +1,16 @@
-import accountQueries from './query_handlers.js'
 import lib from '../../../library/index.js'
 import accountUtils from './utils.js'
 import authUtils from '../../../authentication/auth_utils.js'
 import communications from '../../../communications/index.js'
+import accountQueries from './query_handlers.js'
 
 const {
-  utils: { readQuery, createError },
+  utils: { readQuery, createError, genTempToken },
 } = lib
 
 const { generateTokens } = authUtils
 
-const { setTokensCookie, validateAccount, genResetToken } = accountUtils
+const { setTokensCookie, validateAccount } = accountUtils
 
 const {
   createAccountWithEmailAndPasswordQuery,
@@ -18,10 +18,11 @@ const {
   updatePasswordQuery,
   addPasswordResetTokenQuery,
   updatePasswordRecoveredQuery,
+  emailConfirmationQuery,
 } = accountQueries
 
 const {
-  templates: { passwordResetEmail },
+  templates: { passwordResetEmail, confirmAccount },
   providers: { sendEmail },
 } = communications
 
@@ -29,12 +30,16 @@ const createAccount = async (req, res, next) => {
   try {
     const query = await createAccountWithEmailAndPasswordQuery(req.body)
     const DB_res = await readQuery(query)
-    const { acc_id } = DB_res[0][0]
+    const { acc_id, account_confirmation_token, email_primary } = DB_res[0][0]
 
     const { authToken, refresh_token } = await generateTokens(acc_id)
 
     setTokensCookie(res, authToken, 'authToken')
     setTokensCookie(res, refresh_token, 'refreshToken')
+
+    const emailMsg = confirmAccount(email_primary, account_confirmation_token)
+
+    await sendEmail(emailMsg)
 
     res.status(201).send({ success: true })
   } catch (error) {
@@ -119,7 +124,7 @@ const passwordRecovery = async (req, res, next) => {
   try {
     const { email_primary } = req.body
 
-    const resetToken = genResetToken()
+    const resetToken = genTempToken()
 
     const query = addPasswordResetTokenQuery(email_primary, resetToken)
     const DB_res = await readQuery(query)
@@ -163,6 +168,24 @@ const newPasswordRecovered = async (req, res, next) => {
     next(error)
   }
 }
+const emailConfirmation = async (req, res, next) => {
+  try {
+    const { token } = req.params
+
+    const query = await emailConfirmationQuery(token)
+    const DB_res = await readQuery(query)
+
+    const isUpdated = DB_res[1].rowCount
+
+    if (isUpdated) {
+      res.status(200).send({ success: true })
+    } else {
+      res.status(400).send({ success: false, msg: 'Account not confirmed' })
+    }
+  } catch (error) {
+    next(error)
+  }
+}
 
 const userHandlers = {
   createAccount,
@@ -173,6 +196,7 @@ const userHandlers = {
   newPassword,
   passwordRecovery,
   newPasswordRecovered,
+  emailConfirmation,
 }
 
 export default userHandlers
