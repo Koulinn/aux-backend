@@ -1,4 +1,5 @@
 import sequelize from '../DB/db_config.js'
+import randomstring from 'randomstring'
 
 const createError = (status, msg) => {
   const err = {
@@ -26,9 +27,19 @@ const readQuery = async (query) => {
   }
 }
 
+const genTempToken = () => {
+  const token = randomstring.generate({
+    length: 20,
+    charset: 'alphabetic',
+  })
+
+  return token
+}
+
 const utils = {
   createError,
   bodyHasSQLInjection,
   readQuery,
+  genTempToken,
 }
 export default utils

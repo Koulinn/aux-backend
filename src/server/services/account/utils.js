@@ -1,7 +1,6 @@
 import accountQueryHandlers from './query_handlers.js'
 import lib from '../../../library/index.js'
 import authUtils from '../../../authentication/auth_utils.js'
-import randomstring from 'randomstring'
 
 const {
   utils: { readQuery },
@@ -17,15 +16,6 @@ const setTokensCookie = (res, authToken, cookieName) => {
     httpOnly: true,
     sameSite: false,
   })
-}
-
-const genResetToken = () => {
-  const token = randomstring.generate({
-    length: 20,
-    charset: 'alphabetic',
-  })
-
-  return token
 }
 
 const validateAccount = async (email, password) => {
@@ -54,7 +44,6 @@ const validateAccount = async (email, password) => {
 const utils = {
   setTokensCookie,
   validateAccount,
-  genResetToken,
 }
 
 export default utils
