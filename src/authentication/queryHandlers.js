@@ -10,12 +10,15 @@ const createAccountWithOAuthQuery = async (
             email_primary, 
             ${strategyAccount}, 
             accepted_terms, 
-            account_type
+            account_type,
+            confirmed_acc
         ) VALUES (
             '${email_primary}', 
             '${OauthId}', 
             ${accepted_terms}, 
-            '${account_type}') 
+            '${account_type}',
+            true 
+        )
         RETURNING 
              acc_id
       ;`
