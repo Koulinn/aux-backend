@@ -18,10 +18,11 @@ const {
   newPassword,
   passwordRecovery,
   newPasswordRecovered,
+  emailConfirmation,
 } = accountHandlers
 
 const router = express.Router()
-
+//TO DO ADD middleware to check existent email
 router.route('/').post(bodySQLPrevention, createAccount)
 
 router.route('/me').get(validateAccess, validateAccount, getUser)
@@ -52,8 +53,11 @@ router
   .get(passport.authenticate('github'), redirect)
 
 router.route('/passwordRecovery').put(bodySQLPrevention, passwordRecovery)
+
 router
   .route('/passwordRecovery/:token')
   .put(bodySQLPrevention, newPasswordRecovered)
+
+router.route('/confirmation/:token').put(emailConfirmation)
 
 export default router
